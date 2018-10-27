@@ -18,7 +18,10 @@
   },
   "dependencies": {
     "@opam/dune": "*",
+    "@opam/ssl": "*",
     "@opam/lwt": "*",
+    "@opam/lwt_ssl": "*",
+    "@opam/lwt_ppx": "*",
     "@opam/cohttp": "*",
     "@opam/cohttp-lwt-unix": "*",
     "@esy-ocaml/reason": "*",
@@ -27,7 +30,8 @@
   "resolutions": {
     "@esy-ocaml/esy-installer": "0.0.1",
     "@opam/menhir": "20171013",
-    "@opam/re": "1.8.0"
+    "@opam/re": "1.8.0",
+    "@opam/ssl": "0.5.5"
   },
   "devDependencies": {
     "@esy-ocaml/merlin": "*",

@@ -1,7 +1,19 @@
 {
-  "hash": "b9ea691765b73d4f537b6b141d371df7",
+  "hash": "02cebb1b53fe44afbac4675aedbc6900",
   "root": "root@path:./package.json",
   "node": {
+    "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#d488cd9321cd5036bd36ec96744ce78c5d45fc49": {
+      "record": {
+        "name": "yarn-pkg-config",
+        "version":
+          "github:esy-ocaml/yarn-pkg-config#d488cd9321cd5036bd36ec96744ce78c5d45fc49",
+        "source":
+          "github:esy-ocaml/yarn-pkg-config#d488cd9321cd5036bd36ec96744ce78c5d45fc49",
+        "files": [],
+        "opam": null
+      },
+      "dependencies": []
+    },
     "root@path:./package.json": {
       "record": {
         "name": "root",
@@ -11,9 +23,11 @@
         "opam": null
       },
       "dependencies": [
-        "@esy-ocaml/merlin@3.0.5005", "@esy-ocaml/reason@3.3.5",
+        "@esy-ocaml/merlin@3.0.5005", "@esy-ocaml/reason@3.3.7",
         "@opam/cohttp@opam:1.2.0", "@opam/cohttp-lwt-unix@opam:1.2.0",
-        "@opam/dune@opam:1.4.0", "@opam/lwt@opam:4.1.0", "ocaml@4.6.7"
+        "@opam/dune@opam:1.4.0", "@opam/lwt@opam:4.1.0",
+        "@opam/lwt_ppx@opam:1.2.1", "@opam/lwt_ssl@opam:1.1.2",
+        "@opam/ssl@opam:0.5.5", "ocaml@4.6.7"
       ]
     },
     "ocaml@4.6.7": {
@@ -171,6 +185,40 @@
         "@opam/jbuilder@opam:transition", "ocaml@4.6.7"
       ]
     },
+    "@opam/ssl@opam:0.5.5": {
+      "record": {
+        "name": "@opam/ssl",
+        "version": "opam:0.5.5",
+        "source":
+          "archive:https://github.com/savonet/ocaml-ssl/releases/download/0.5.5/ocaml-ssl-0.5.5.tar.gz#md5:cdb1cdf9ee8c582165d4d11f35e53c4d",
+        "files": [
+          {
+            "name": "osx-configure.sh",
+            "content":
+              "#!/bin/sh\n\nPREFIX=$1\n\nif [ -d \"/usr/local/opt/openssl/\" ]; then\n  # Homebrew\n  ./configure --prefix \"${PREFIX}\" CPPFLAGS=\"-I/usr/local/opt/openssl/include\" LDFLAGS=\"-L/usr/local/opt/openssl/lib\"\nelse\n  # MacPorts\n  ./configure --prefix \"${PREFIX}\" CPPFLAGS=\"-I/opt/local/include\" LDFLAGS=\"-L/opt/local/lib\"\nfi\n",
+            "perm": 493
+          }
+        ],
+        "opam": {
+          "name": "ssl",
+          "version": "0.5.5",
+          "opam":
+            "opam-version: \"2.0\"\nname: \"ssl\"\nversion: \"0.5.5\"\nsynopsis: \"Bindings for OpenSSL\"\nmaintainer: \"Christopher Zimmermann <christopher@gmerlin.de>\"\nauthors: \"Samuel Mimram <samuel.mimram@ens-lyon.org>\"\nhomepage: \"https://github.com/savonet/ocaml-ssl\"\nbug-reports: \"https://github.com/savonet/ocaml-ssl/issues\"\ndepends: [\n  \"ocaml\"\n  \"ocamlfind\" {build}\n  \"conf-which\" {build}\n  \"conf-openssl\"\n  \"base-bytes\"\n]\nflags: light-uninstall\nbuild: [\n  [\"./configure\" \"--prefix\" prefix] {os != \"macos\"}\n  [\"./osx-configure.sh\" prefix] {os = \"macos\"}\n  [make]\n]\ninstall: [make \"install\"]\nremove: [\"ocamlfind\" \"remove\" name]\ndev-repo: \"git+https://github.com/savonet/ocaml-ssl.git\"\nextra-files: [\"osx-configure.sh\" \"md5=465e7c27f1881eae33212a9f9b0a8dff\"]\nurl {\n  src:\n    \"https://github.com/savonet/ocaml-ssl/releases/download/0.5.5/ocaml-ssl-0.5.5.tar.gz\"\n  checksum: \"md5=cdb1cdf9ee8c582165d4d11f35e53c4d\"\n}",
+          "override": {
+            "build": [
+              "sed -i'' -e 's/OCAMLFIND_LDCONF=.*/OCAMLFIND_LDCONF=\"ignore\"/g' ./configure",
+              "#{os == 'darwin' ? './osx-configure.sh' : './configure --prefix'} #{self.install}",
+              "make"
+            ]
+          }
+        }
+      },
+      "dependencies": [
+        "@esy-ocaml/substs@0.0.1", "@opam/base-bytes@opam:base",
+        "@opam/conf-openssl@opam:1", "@opam/conf-which@opam:1",
+        "@opam/ocamlfind@opam:1.8.0", "ocaml@4.6.7"
+      ]
+    },
     "@opam/sexplib0@opam:v0.11.0": {
       "record": {
         "name": "@opam/sexplib0",
@@ -294,6 +342,26 @@
         "@opam/ocaml-migrate-parsetree@opam:1.1.0",
         "@opam/ppx_derivers@opam:1.0", "@opam/stdio@opam:v0.11.0",
         "ocaml@4.6.7"
+      ]
+    },
+    "@opam/ppx_tools_versioned@opam:5.2.1": {
+      "record": {
+        "name": "@opam/ppx_tools_versioned",
+        "version": "opam:5.2.1",
+        "source":
+          "archive:https://github.com/ocaml-ppx/ppx_tools_versioned/archive/5.2.1.tar.gz#md5:1ae6ae43ec161fbbf12c2b4d3a7e26f5",
+        "files": [],
+        "opam": {
+          "name": "ppx_tools_versioned",
+          "version": "5.2.1",
+          "opam":
+            "opam-version: \"2.0\"\nname: \"ppx_tools_versioned\"\nversion: \"5.2.1\"\nsynopsis: \"A variant of ppx_tools based on ocaml-migrate-parsetree\"\nmaintainer: \"frederic.bour@lakaban.net\"\nauthors: [\n  \"Frédéric Bour <frederic.bour@lakaban.net>\"\n  \"Alain Frisch <alain.frisch@lexifi.com>\"\n]\nlicense: \"MIT\"\ntags: \"syntax\"\nhomepage: \"https://github.com/let-def/ppx_tools_versioned\"\nbug-reports: \"https://github.com/let-def/ppx_tools_versioned/issues\"\ndepends: [\n  \"ocaml\" {>= \"4.02.0\"}\n  \"jbuilder\" {build & >= \"1.0+beta17\"}\n  \"ocaml-migrate-parsetree\" {>= \"1.0.10\"}\n]\nbuild: [\n  [\"jbuilder\" \"subst\" \"-p\" name] {pinned}\n  [\"jbuilder\" \"build\" \"-p\" name \"-j\" jobs]\n  [\"jbuilder\" \"runtest\" \"-p\" name \"-j\" jobs] {with-test}\n]\ndev-repo: \"git://github.com/let-def/ppx_tools_versioned.git\"\nurl {\n  src:\n    \"https://github.com/ocaml-ppx/ppx_tools_versioned/archive/5.2.1.tar.gz\"\n  checksum: \"md5=1ae6ae43ec161fbbf12c2b4d3a7e26f5\"\n}",
+          "override": null
+        }
+      },
+      "dependencies": [
+        "@esy-ocaml/substs@0.0.1", "@opam/jbuilder@opam:transition",
+        "@opam/ocaml-migrate-parsetree@opam:1.1.0", "ocaml@4.6.7"
       ]
     },
     "@opam/ppx_sexp_conv@opam:v0.11.2": {
@@ -674,6 +742,48 @@
         "ocaml@4.6.7"
       ]
     },
+    "@opam/lwt_ssl@opam:1.1.2": {
+      "record": {
+        "name": "@opam/lwt_ssl",
+        "version": "opam:1.1.2",
+        "source":
+          "archive:https://github.com/aantron/lwt_ssl/archive/1.1.2.tar.gz#md5:d239353b1e7c6e3fd4192c71a3b25ce2",
+        "files": [],
+        "opam": {
+          "name": "lwt_ssl",
+          "version": "1.1.2",
+          "opam":
+            "opam-version: \"2.0\"\nname: \"lwt_ssl\"\nversion: \"1.1.2\"\nsynopsis: \"OpenSSL binding with concurrent I/O\"\nmaintainer: \"Anton Bachin <antonbachin@yahoo.com>\"\nauthors: [\"Jérôme Vouillon\" \"Jérémie Dimino\"]\nlicense: \"LGPL with OpenSSL linking exception\"\nhomepage: \"https://github.com/aantron/lwt_ssl\"\ndoc: \"https://github.com/aantron/lwt_ssl/blob/master/src/lwt_ssl.mli\"\nbug-reports: \"https://github.com/aantron/lwt_ssl/issues\"\ndepends: [\n  \"ocaml\"\n  \"base-unix\"\n  \"jbuilder\" {build & >= \"1.0+beta10\"}\n  \"lwt\" {>= \"3.0.0\"}\n  \"ssl\" {>= \"0.5.0\"}\n]\nbuild: [\"jbuilder\" \"build\" \"-p\" name \"-j\" jobs]\ndev-repo: \"git+https://github.com/aantron/lwt_ssl.git\"\nurl {\n  src: \"https://github.com/aantron/lwt_ssl/archive/1.1.2.tar.gz\"\n  checksum: \"md5=d239353b1e7c6e3fd4192c71a3b25ce2\"\n}",
+          "override": null
+        }
+      },
+      "dependencies": [
+        "@esy-ocaml/substs@0.0.1", "@opam/base-unix@opam:base",
+        "@opam/jbuilder@opam:transition", "@opam/lwt@opam:4.1.0",
+        "@opam/ssl@opam:0.5.5", "ocaml@4.6.7"
+      ]
+    },
+    "@opam/lwt_ppx@opam:1.2.1": {
+      "record": {
+        "name": "@opam/lwt_ppx",
+        "version": "opam:1.2.1",
+        "source":
+          "archive:https://github.com/ocsigen/lwt/archive/4.1.0.tar.gz#md5:e919bee206f18b3d49250ecf9584fde7",
+        "files": [],
+        "opam": {
+          "name": "lwt_ppx",
+          "version": "1.2.1",
+          "opam":
+            "opam-version: \"2.0\"\nname: \"lwt_ppx\"\nversion: \"1.2.1\"\nsynopsis:\n  \"PPX syntax for Lwt, providing something similar to async/await from JavaScript\"\nmaintainer: \"Anton Bachin <antonbachin@yahoo.com>\"\nauthors: \"Gabriel Radanne\"\nlicense: \"LGPL with OpenSSL linking exception\"\nhomepage: \"https://github.com/ocsigen/lwt\"\ndoc: \"https://ocsigen.org/lwt/api/Ppx_lwt\"\nbug-reports: \"https://github.com/ocsigen/lwt/issues\"\ndepends: [\n  \"ocaml\" {>= \"4.02.0\"}\n  \"jbuilder\" {build & >= \"1.0+beta14\"}\n  \"lwt\"\n  \"ocaml-migrate-parsetree\"\n  \"ppx_tools_versioned\" {>= \"5.0.1\"}\n]\nbuild: [\"jbuilder\" \"build\" \"-p\" name \"-j\" jobs]\ndev-repo: \"git+https://github.com/ocsigen/lwt.git\"\nurl {\n  src: \"https://github.com/ocsigen/lwt/archive/4.1.0.tar.gz\"\n  checksum: \"md5=e919bee206f18b3d49250ecf9584fde7\"\n}",
+          "override": null
+        }
+      },
+      "dependencies": [
+        "@esy-ocaml/substs@0.0.1", "@opam/jbuilder@opam:transition",
+        "@opam/lwt@opam:4.1.0", "@opam/ocaml-migrate-parsetree@opam:1.1.0",
+        "@opam/ppx_tools_versioned@opam:5.2.1", "ocaml@4.6.7"
+      ]
+    },
     "@opam/lwt@opam:4.1.0": {
       "record": {
         "name": "@opam/lwt",
@@ -896,6 +1006,55 @@
         }
       },
       "dependencies": [ "@esy-ocaml/substs@0.0.1" ]
+    },
+    "@opam/conf-pkg-config@opam:1.1": {
+      "record": {
+        "name": "@opam/conf-pkg-config",
+        "version": "opam:1.1",
+        "source": "no-source:",
+        "files": [],
+        "opam": {
+          "name": "conf-pkg-config",
+          "version": "1.1",
+          "opam":
+            "opam-version: \"2.0\"\nname: \"conf-pkg-config\"\nversion: \"1.1\"\nsynopsis: \"Virtual package relying on pkg-config installation\"\ndescription: \"\"\"\nThis package can only install if the pkg-config package is installed\non the system.\"\"\"\nmaintainer: \"unixjunkie@sdf.org\"\nauthors: \"Francois Berenger\"\nlicense: \"GPL\"\nhomepage: \"http://www.freedesktop.org/wiki/Software/pkg-config/\"\nbug-reports: \"https://github.com/ocaml/opam-repository/issues\"\nflags: light-uninstall\nbuild: [\"pkg-config\" \"--help\"]\ninstall:\n  [\"ln\" \"-s\" \"/usr/local/bin/pkgconf\" \"%{bin}%/pkg-config\"] {os = \"openbsd\"}\nremove: [\"rm\" \"-f\" \"%{bin}%/pkg-config\"] {os = \"openbsd\"}\npost-messages:\n  \"conf-pkg-config: A symlink to /usr/local/bin/pkgconf has been installed in the OPAM bin directory (%{bin}%) on your PATH as 'pkg-config'. This is necessary for correct operation.\"\n    {os = \"openbsd\"}\ndepexts: [\n  [\"pkg-config\"] {os-distribution = \"debian\"}\n  [\"pkg-config\"] {os-distribution = \"ubuntu\"}\n  [\"pkg-config\"] {os-distribution = \"archlinux\"}\n  [\"pkgconfig\"] {os-distribution = \"fedora\"}\n  [\"pkgconfig\"] {os-distribution = \"centos\"}\n  [\"pkgconfig\"] {os-distribution = \"mageia\"}\n  [\"pkgconfig\"] {os-distribution = \"rhel\"}\n  [\"pkgconfig\"] {os-distribution = \"oraclelinux\"}\n  [\"pkgconfig\"] {os-distribution = \"alpine\"}\n  [\"devel/pkgconf\"] {os = \"freebsd\"}\n  [\"devel/pkgconf\"] {os = \"openbsd\"}\n  [\"pkg-config\"] {os = \"macos\" & os-distribution = \"homebrew\"}\n  [\"pkgconf\"] {os = \"freebsd\"}\n]",
+          "override": {
+            "dependencies": {
+              "yarn-pkg-config":
+                "github:esy-ocaml/yarn-pkg-config#d488cd9321cd5036bd36ec96744ce78c5d45fc49"
+            }
+          }
+        }
+      },
+      "dependencies": [
+        "@esy-ocaml/substs@0.0.1",
+        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#d488cd9321cd5036bd36ec96744ce78c5d45fc49"
+      ]
+    },
+    "@opam/conf-openssl@opam:1": {
+      "record": {
+        "name": "@opam/conf-openssl",
+        "version": "opam:1",
+        "source": "no-source:",
+        "files": [
+          {
+            "name": "osx-build.sh",
+            "content":
+              "#!/bin/sh\n\nif [ -d \"/usr/local/opt/openssl/\" ]; then\n  # Homebrew\n  PKG_CONFIG_PATH=/usr/local/opt/openssl/lib/pkgconfig pkg-config openssl\nelse\n  # MacPorts\n  PKG_CONFIG_PATH=/opt/local/lib/pkgconfig pkg-config openssl\nfi\n",
+            "perm": 493
+          }
+        ],
+        "opam": {
+          "name": "conf-openssl",
+          "version": "1",
+          "opam":
+            "opam-version: \"2.0\"\nname: \"conf-openssl\"\nversion: \"1\"\nsynopsis: \"Virtual package relying on an OpenSSL system installation\"\ndescription:\n  \"This package can only install if OpenSSL is installed on the system.\"\nmaintainer: \"David Sheets <sheets@alum.mit.edu>\"\nauthors: \"The OpenSSL Project\"\nlicense: \"Apache-1.0\"\nhomepage: \"https://www.openssl.org/\"\nbug-reports: \"https://github.com/ocaml/opam-repository/issues\"\ndepends: [\n  \"conf-pkg-config\" {build}\n]\nbuild: [\n  [\"pkg-config\" \"openssl\"]\n    {os != \"macos\" & os != \"freebsd\" & os != \"openbsd\" & os != \"netbsd\"}\n  [\"./osx-build.sh\"] {os = \"macos\"}\n]\ndepexts: [\n  [\"libssl-dev\"] {os-distribution = \"debian\"}\n  [\"libssl-dev\"] {os-distribution = \"ubuntu\"}\n  [\"openssl-devel\"] {os-distribution = \"centos\"}\n  [\"openssl-devel\"] {os-distribution = \"oraclelinux\"}\n  [\"openssl-devel\"] {os-distribution = \"fedora\"}\n  [\"openssl\"] {os = \"macos\" & os-distribution = \"homebrew\"}\n  [\"openssl\"] {os = \"macos\" & os-distribution = \"macports\"}\n  [\"libressl-dev\"] {os-distribution = \"alpine\"}\n  [\"openssl\"] {os-distribution = \"nixos\"}\n  [\"openssl\"] {os-distribution = \"archlinux\"}\n  [\"libopenssl-devel\"] {os-distribution = \"opensuse\"}\n]\nextra-files: [\"osx-build.sh\" \"md5=351f350c49d98ef4b77037c9ed277d52\"]",
+          "override": null
+        }
+      },
+      "dependencies": [
+        "@esy-ocaml/substs@0.0.1", "@opam/conf-pkg-config@opam:1.1"
+      ]
     },
     "@opam/conf-m4@opam:1": {
       "record": {
@@ -1213,12 +1372,12 @@
       },
       "dependencies": []
     },
-    "@esy-ocaml/reason@3.3.5": {
+    "@esy-ocaml/reason@3.3.7": {
       "record": {
         "name": "@esy-ocaml/reason",
-        "version": "3.3.5",
+        "version": "3.3.7",
         "source":
-          "archive:https://registry.npmjs.org/@esy-ocaml/reason/-/reason-3.3.5.tgz#sha1:be17c1c2733b67044244ae508874bb6ef6032b7e",
+          "archive:https://registry.npmjs.org/@esy-ocaml/reason/-/reason-3.3.7.tgz#sha1:4d75b8876807c4178c6fff2359962066bb69d944",
         "files": [],
         "opam": null
       },
